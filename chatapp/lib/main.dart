@@ -1,13 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import '';
+import 'package:chatapp/widgetsforapp/signupscreen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(MaterialApp(
     title: 'My App', // App title
-    initialRoute: '/', // Set the initial route (optional)
+    initialRoute: '/',
     routes: {
-      '/': (context) => const homepage(), // Home page route (optional)
-      signuppage.signupRoute: (context) => const signuppage(), // Signup route
+      '/': (context) => const signuppage(),
     },
   ));
 }
