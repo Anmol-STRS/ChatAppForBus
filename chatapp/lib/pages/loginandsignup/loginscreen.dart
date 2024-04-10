@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chatapp/pages/database.dart';
+import 'package:chatapp/pages/loginandsignup/signupscreen.dart';
 import 'package:chatapp/pages/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -100,10 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const Spacer(),
                             ElevatedButton(
-                              onPressed: () => {
-                                addData(_emailController.text, _passwordController.text, _passwordController),
-                                log(_passwordController.text)
-                              },
+                              onPressed: () => Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => SignupScreen())),
                               style: ElevatedButton.styleFrom(
                                   elevation: 4,
                                   backgroundColor: Colors.white,
