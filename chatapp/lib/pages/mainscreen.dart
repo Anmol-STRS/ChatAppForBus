@@ -1,3 +1,4 @@
+import 'package:chatapp/pages/loginandsignup/loginscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -50,7 +51,8 @@ class _MainPageScreenState extends State<MainPageScreen> {
                 stops: const [0.0, 1.0],
                 tileMode: TileMode.clamp,
               ),
-              border: Border.all(color: Colors.black))),
+              border: Border.all(color: Colors.black)), child: const LoginScreen()),
+          
     );
   }
 }
