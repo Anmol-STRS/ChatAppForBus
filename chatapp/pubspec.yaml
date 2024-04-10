@@ -12,6 +12,7 @@ dependencies:
   firebase_database: ^10.4.11
   flutter:
     sdk: flutter
+  getwidget: ^4.0.0
 
 dev_dependencies:
   flutter_test:
