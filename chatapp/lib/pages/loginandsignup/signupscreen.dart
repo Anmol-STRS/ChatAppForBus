@@ -1,3 +1,4 @@
+import 'package:chatapp/pages/database.dart';
 import 'package:chatapp/pages/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -29,17 +30,13 @@ class SignupScreen extends StatelessWidget {
                 bottomRight: Radius.elliptical(60, 10),
               ),
             ),
-            leading: 
-            GestureDetector(
-              onDoubleTap: () => {
-                _goBackToMainScreen(context)
-              },
-              child:
-             const Icon(
-              Icons.person_2_outlined,
-              size: 30,
-              color: Colors.black,
-            ),
+            leading: GestureDetector(
+              onDoubleTap: () => {_goBackToMainScreen(context)},
+              child: const Icon(
+                Icons.person_2_outlined,
+                size: 30,
+                color: Colors.black,
+              ),
             ) //const Icon(Icons.mark_unread_chat_alt_sharp,textDirection: TextDirection.rtl),
             ),
         body: CustomGradientContainer(
@@ -67,7 +64,8 @@ class SignupScreen extends StatelessWidget {
                                 ),
                                 labelText: 'Email Address',
                                 hintText: 'Enter your email',
-                                prefixIcon: const Icon(Icons.mail_lock_outlined),
+                                prefixIcon:
+                                    const Icon(Icons.mail_lock_outlined),
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                               ),
@@ -92,6 +90,7 @@ class SignupScreen extends StatelessWidget {
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                               ),
+                              obscureText: true,
                             ),
                           ),
                           const SizedBox(height: 25),
@@ -113,6 +112,7 @@ class SignupScreen extends StatelessWidget {
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                               ),
+                              obscureText: true,
                             ),
                           ),
                         ])),
@@ -121,7 +121,32 @@ class SignupScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    // Add your signup logic here
+                    if (_passwordController.text ==
+                        _finalpasswordController.text) {
+                      // Passwords match, proceed with registration
+                      addData(_emailController.text, _passwordController.text,
+                          _finalpasswordController);
+                    } else {
+                      // Passwords don't match, show a popup dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            backgroundColor: Colors.white,
+                            content: const Text('Your Passwords do not match.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                   child: const Text('Sign Up'),
                 ),
