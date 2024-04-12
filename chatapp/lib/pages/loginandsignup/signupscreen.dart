@@ -29,10 +29,17 @@ class SignupScreen extends StatelessWidget {
                 bottomRight: Radius.elliptical(60, 10),
               ),
             ),
-            leading: const Icon(
+            leading: 
+            GestureDetector(
+              onDoubleTap: () => {
+                _goBackToMainScreen(context)
+              },
+              child:
+             const Icon(
               Icons.person_2_outlined,
               size: 30,
               color: Colors.black,
+            ),
             ) //const Icon(Icons.mark_unread_chat_alt_sharp,textDirection: TextDirection.rtl),
             ),
         body: CustomGradientContainer(
@@ -123,4 +130,8 @@ class SignupScreen extends StatelessWidget {
           ),
         ));
   }
+}
+
+void _goBackToMainScreen(BuildContext context) {
+  Navigator.pop(context);
 }
