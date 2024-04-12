@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chatapp/pages/database.dart';
 import 'package:chatapp/pages/loginandsignup/signupscreen.dart';
 import 'package:chatapp/pages/theme/theme.dart';
+import 'package:chatapp/services/checkforuser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:getwidget/components/badge/gf_icon_badge.dart';
@@ -17,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool result = false;
 
   void _login() {
     // Implement your login logic here
@@ -101,7 +103,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const Spacer(),
                             ElevatedButton(
-                              onPressed: () => Navigator.push(context,
+                              onPressed: () async => /*{
+                                result = await getUserInput(_emailController.text.toString()),
+                                log(result.toString())
+                              }*/
+                              Navigator.push(context,
                               MaterialPageRoute(builder: (context) => SignupScreen())),
                               style: ElevatedButton.styleFrom(
                                   elevation: 4,
