@@ -2,7 +2,6 @@ import 'package:chatapp/firebase_options.dart';
 import 'package:chatapp/pages/mainscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:chatapp/pages/loginandsignup/signupscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +11,7 @@ void main() async {
     title: 'My App', // App title
     initialRoute: '/',
     routes: {
-      '/': (context) => MainPageScreen(),
+      '/': (context) => const MainPageScreen(),
     },
   ));
 }
