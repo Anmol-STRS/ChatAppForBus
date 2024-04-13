@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isSigning = false;
   final FirebaseAuthService _auth = FirebaseAuthService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  LocalNotificationService ls = LocalNotificationService();
+  NotificationService ls = NotificationService();
 
   void _login() {
     // Implement your login logic here
@@ -120,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             const SignupScreen())),
-                                            ls.showNotificationAndroid('Signup', 'High')
+                                ls.showNotification(0, 'Signup', 'Signup successfull', 'Signup')
                               },
                               style: ElevatedButton.styleFrom(
                                   elevation: 4,
