@@ -1,12 +1,11 @@
 import 'dart:developer';
 
-import 'package:chatapp/pages/database.dart';
 import 'package:chatapp/pages/loginandsignup/signupscreen.dart';
 import 'package:chatapp/pages/theme/theme.dart';
-import 'package:chatapp/services/checkforuser.dart';
+import 'package:chatapp/services/auth.dart';
+import 'package:chatapp/services/notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:getwidget/components/badge/gf_icon_badge.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,7 +17,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool result = false;
+  final bool result = false;
+  bool _isSigning = false;
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  NotificationService ls = NotificationService();
 
   void _login() {
     // Implement your login logic here
@@ -26,6 +29,13 @@ class _LoginScreenState extends State<LoginScreen> {
     String password = _passwordController.text;
     // You can perform validations or authenticate the user here
     log('Email: $email, Password: $password');
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               fillColor: Colors.white,
                               labelText: 'Email',
                               hintText: 'Enter your email',
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
                               prefixIcon:
                                   const Icon(Icons.alternate_email_sharp),
                             ),
@@ -81,7 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               labelText: 'Password',
                               hintText: 'Enter your password',
                               prefixIcon: const Icon(Icons.password_outlined),
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
                             ),
                             obscureText: true,
                           ),
@@ -92,28 +104,28 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             ElevatedButton(
-                              onPressed: () => readData(),
+                              onPressed: () => _signIn(),
                               style: ElevatedButton.styleFrom(
                                   elevation: 4,
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black,
-                                  shadowColor: Colors.white
-                                  ),
+                                  shadowColor: Colors.white),
                               child: const Text('Login'),
                             ),
                             const Spacer(),
                             ElevatedButton(
-                              onPressed: () async => /*{
-                                result = await getUserInput(_emailController.text.toString()),
-                                log(result.toString())
-                              }*/
-                              Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => SignupScreen())),
+                              onPressed: () async => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SignupScreen())),
+                                ls.showNotification(0, 'Signup', 'Signup successfull', 'Signup')
+                              },
                               style: ElevatedButton.styleFrom(
                                   elevation: 4,
                                   backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black
-                                  ),
+                                  foregroundColor: Colors.black),
                               child: const Text('Signup'),
                             ),
                           ],
@@ -128,5 +140,44 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void _signIn() async {
+    setState(() {
+      _isSigning = true;
+    });
+
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    setState(() {
+      _isSigning = false;
+    });
+
+    if (user != null) {
+      log("User is successfully signed in");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Sign In Successful'),
+            content: const Text('You have successfully signed in.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Some error occurred during sign-in
+      log("Some error occurred");
+    }
   }
 }

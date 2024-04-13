@@ -8,12 +8,15 @@ environment:
 
 dependencies:
   cloud_firestore: ^4.15.10
+  firebase_auth: ^4.19.1
   firebase_core: ^2.27.2
   firebase_database: ^10.4.11
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^17.0.0
   getwidget: ^4.0.0
 
+  timezone: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
