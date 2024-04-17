@@ -1,5 +1,8 @@
 import 'package:chatapp/pages/loginandsignup/loginscreen.dart';
+import 'package:chatapp/pages/spalshscreen.dart';
+import 'package:chatapp/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class MainPageScreen extends StatefulWidget {
   const MainPageScreen({super.key});
@@ -19,6 +22,26 @@ class _MainPageScreenState extends State<MainPageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.black87,
+                Colors.grey.shade900,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: const [0.0, 1.0],
+              tileMode: TileMode.clamp,
+            ),
+            border: Border.all(color: Colors.black)),
+        child: MainLogoScreen(),
+      ),
+    );
+  }
+}
+
+/*
       appBar: AppBar(
           title: const Text('TextApp'),
           backgroundColor: Colors.grey.shade600,
@@ -43,20 +66,4 @@ class _MainPageScreenState extends State<MainPageScreen> {
             color: Colors.black,
           ) //const Icon(Icons.mark_unread_chat_alt_sharp,textDirection: TextDirection.rtl),
           ),
-      body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.black87,
-                  Colors.grey.shade900,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: const [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
-              border: Border.all(color: Colors.black)),
-          child: const LoginScreen()),
-    );
-  }
-}
+*/

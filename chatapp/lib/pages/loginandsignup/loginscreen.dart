@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:chatapp/pages/loginandsignup/signupscreen.dart';
-import 'package:chatapp/pages/theme/theme.dart';
+import 'package:chatapp/theme/theme.dart';
 import 'package:chatapp/services/auth.dart';
 import 'package:chatapp/services/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final bool result = false;
@@ -24,10 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   NotificationService ls = NotificationService();
 
   void _login() {
-    // Implement your login logic here
     String email = _emailController.text;
     String password = _passwordController.text;
-    // You can perform validations or authenticate the user here
     log('Email: $email, Password: $password');
   }
 
@@ -120,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             const SignupScreen())),
-                                ls.showNotification(0, 'Signup', 'Signup successfull', 'Signup')
+                                            ls.showNotification(title: 'Logged in', body: 'Logged in')
                               },
                               style: ElevatedButton.styleFrom(
                                   elevation: 4,
@@ -128,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   foregroundColor: Colors.black),
                               child: const Text('Signup'),
                             ),
+                            //BottomNavigationBar(items: )
                           ],
                         )
                       ],
@@ -176,7 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       );
     } else {
-      // Some error occurred during sign-in
       log("Some error occurred");
     }
   }

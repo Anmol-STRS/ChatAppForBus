@@ -1,8 +1,9 @@
 import 'dart:developer';
 
-import 'package:chatapp/pages/database.dart';
-import 'package:chatapp/pages/theme/theme.dart';
+import 'package:chatapp/services/database.dart';
+import 'package:chatapp/theme/theme.dart';
 import 'package:chatapp/services/auth.dart';
+import 'package:chatapp/services/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -192,7 +193,9 @@ class _SignupScreenState extends State<SignupScreen> {
     });
     if (user != null) {
       log("User is successfully created");
-      _goBackToMainScreen(context);
+      NotificationService()
+          .showNotification(body: 'User Signed Up', title: 'User Signup');
+      //_goBackToMainScreen(context);
     } else {
       log('Some error happend');
     }
