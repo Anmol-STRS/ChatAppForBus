@@ -13,35 +13,8 @@ class ChatScreenMain extends StatefulWidget {
 }
 
 class _chatScreenMainState extends State<ChatScreenMain> {
-  late DatabaseReference _userRef;
-  List<Map<dynamic, dynamic>> _users = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _userRef = FirebaseDatabase.instance.ref().child('users');
-    _users = [];
-    _fetchUsers();
-  }
-
-  Future<void> _fetchUsers() async {
-    _userRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        final Map<dynamic, dynamic>? data =
-            event.snapshot.value as Map<dynamic, dynamic>?;
-        if (data != null) {
-          setState(() {
-            _users = data.entries
-                .map((e) => e.value as Map<dynamic, dynamic>)
-                .toList();
-          });
-        }
-      }
-    }, onError: (error) {
-      log("Error fetching users: $error");
-    });
-  }
-
+  final DatabaseReference _user =
+      FirebaseDatabase.instance.ref('Database').child('user');
   @override
   Widget build(BuildContext context) {
     final ThemeData currentTheme = Theme.of(context);
@@ -93,15 +66,36 @@ class _chatScreenMainState extends State<ChatScreenMain> {
               ),
             )),
             Expanded(
-                child: ListView.builder(
-              itemCount: _users.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  subtitle: Text(_users[index]['user']),
-                  tileColor: Colors.black,
-                );
-              },
-            ))
+              child: StreamBuilder<DatabaseEvent>(
+                stream: FirebaseDatabase.instance
+                    .ref('Database')    
+                    .onValue,
+                builder: (BuildContext context, AsyncSnapshot<DatabaseEvent> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+                  if (!dataSnapshot.exists) {
+                    return Text('No data available');
+                  }
+                  Map<dynamic, dynamic> users = dataSnapshot.value as Map<dynamic, dynamic>;
+                  List<dynamic> userList = users.values.toList();
+                  return ListView.builder(
+                    itemCount: userList.length,
+                    itemBuilder: (context, index) {
+                      final userData = userList[index];
+                      final userName = userData['user'] as String;
+                      return ListTile(
+                        title: Text(userName),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

@@ -1,11 +1,11 @@
 import 'dart:developer';
-
+import 'package:chatapp/pages/loginandsignup/chattingscreen.dart';
 import 'package:chatapp/pages/loginandsignup/signupscreen.dart';
 import 'package:chatapp/theme/theme.dart';
 import 'package:chatapp/services/auth.dart';
-import 'package:chatapp/services/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,20 +15,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final bool result = false;
   bool _isSigning = false;
   final FirebaseAuthService _auth = FirebaseAuthService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  NotificationService ls = NotificationService();
-
-  void _login() {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-    log('Email: $email, Password: $password');
-  }
 
   @override
   void dispose() {
@@ -39,103 +31,142 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomGradientContainer(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Material(
-                          borderRadius: BorderRadius.circular(25),
-                          shadowColor: Colors.white70,
-                          color: Colors.white,
-                          elevation: 8,
-                          child: TextField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                                borderSide: const BorderSide(width: 2),
+    final ThemeData currentTheme = Theme.of(context);
+
+    return Theme(
+      data:
+          currentTheme.brightness == Brightness.light ? lightTheme : darkTheme,
+      child: Scaffold(
+        body: Container(
+          color: currentTheme.brightness == Brightness.light
+              ? lightTheme.scaffoldBackgroundColor
+              : darkTheme.scaffoldBackgroundColor,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Material(
+                            borderRadius: BorderRadius.circular(25),
+                            shadowColor: Colors.white70,
+                            color: Colors.white,
+                            elevation: 8,
+                            child: TextField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                  borderSide: const BorderSide(width: 2),
+                                ),
+                                fillColor: Colors.white,
+                                labelText: 'Email',
+                                hintText: 'Enter your email',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                prefixIcon:
+                                    const Icon(Icons.alternate_email_sharp),
                               ),
-                              fillColor: Colors.white,
-                              labelText: 'Email',
-                              hintText: 'Enter your email',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.never,
-                              prefixIcon:
-                                  const Icon(Icons.alternate_email_sharp),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Material(
-                          borderRadius: BorderRadius.circular(25),
-                          shadowColor: Colors.white70,
-                          color: Colors.white,
-                          elevation: 8,
-                          child: TextField(
-                            controller: _passwordController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                                borderSide: const BorderSide(width: 2),
+                          const SizedBox(height: 20),
+                          Material(
+                            borderRadius: BorderRadius.circular(25),
+                            shadowColor: Colors.white70,
+                            color: Colors.white,
+                            elevation: 8,
+                            child: TextField(
+                              controller: _passwordController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                  borderSide: const BorderSide(width: 2),
+                                ),
+                                labelText: 'Password',
+                                hintText: 'Enter your password',
+                                prefixIcon: const Icon(Icons.password_outlined),
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
                               ),
-                              labelText: 'Password',
-                              hintText: 'Enter your password',
-                              prefixIcon: const Icon(Icons.password_outlined),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.never,
+                              obscureText: true,
                             ),
-                            obscureText: true,
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        // Login Button
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            ElevatedButton(
-                              onPressed: () => _signIn(),
-                              style: ElevatedButton.styleFrom(
-                                  elevation: 4,
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black,
-                                  shadowColor: Colors.white),
-                              child: const Text('Login'),
-                            ),
-                            const Spacer(),
-                            ElevatedButton(
-                              onPressed: () async => {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SignupScreen())),
-                                            ls.showNotification(title: 'Logged in', body: 'Logged in')
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  elevation: 4,
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black),
-                              child: const Text('Signup'),
-                            ),
-                            //BottomNavigationBar(items: )
-                          ],
-                        )
-                      ],
+                          const SizedBox(height: 16),
+                          // Login Button
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              ElevatedButton(
+                                onPressed: () => {
+                                  if (_emailController.text.isNotEmpty &&
+                                      _passwordController.text.isNotEmpty)
+                                    {_login()}
+                                  else
+                                    {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: const Text('Error'),
+                                                content: const Text(
+                                                    'Please enter both email and password.'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: const Text('OK'))
+                                                ]);
+                                          })
+                                    },
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ChatScreenMain()))
+                                },
+                                child: Text(
+                                  'Login',
+                                  style: GoogleFonts.robotoMono(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              const Spacer(),
+                              ElevatedButton(
+                                onPressed: () async => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignupScreen())),
+                                },
+                                child: Text(
+                                  'Signup',
+                                  style: GoogleFonts.robotoMono(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              //BottomNavigationBar(items: )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -177,6 +208,58 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else {
       log("Some error occurred");
+    }
+  }
+
+  void _login() {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Please enter both email and password.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      _auth.checkUserExists(email).then((exists) {
+        if (exists) {
+          _signIn();
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('User Not Found'),
+                content: const Text(
+                    'User with this email is not signed up. Please sign up.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      }).catchError((error) {
+        print('Error checking user existence: $error');
+      });
     }
   }
 }

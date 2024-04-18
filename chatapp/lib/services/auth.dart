@@ -21,6 +21,20 @@ class FirebaseAuthService {
     }
     return null;
   }
+  Future<bool> checkUserExists(String email) async {
+    try {
+      // Use FirebaseAuth's built-in method to check if the user exists
+      var userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: '',
+      );
+      await userCredential.user?.delete();
+      return true;
+    } catch (error) {
+      // If there's an error, return false
+      return false;
+    }
+  }
 
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {

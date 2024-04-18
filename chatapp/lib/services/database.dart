@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -6,7 +7,10 @@ import 'package:flutter/material.dart';
 final databaseref = FirebaseDatabase.instance.ref();
 
 void addData(String? user, String? password, TextEditingController controller) {
-  databaseref.child("Database").push().set({'user': user, 'password': password});
+  databaseref
+      .child("Database")
+      .push()
+      .set({'user': user, 'password': password});
   controller.clear();
 }
 

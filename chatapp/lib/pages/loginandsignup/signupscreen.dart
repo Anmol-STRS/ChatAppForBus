@@ -1,11 +1,11 @@
 import 'dart:developer';
-
 import 'package:chatapp/services/database.dart';
 import 'package:chatapp/theme/theme.dart';
 import 'package:chatapp/services/auth.dart';
 import 'package:chatapp/services/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -23,6 +23,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final TextEditingController _finalpasswordController =
       TextEditingController();
+  bool isSignUpEnabled = false;
+
+
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -33,36 +37,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-            title: const Text('Signup'),
-            backgroundColor: Colors.grey.shade600,
-            surfaceTintColor: Colors.black,
-            elevation: 4,
-            titleTextStyle: const TextStyle(
-              fontSize: 25,
-              color: Colors.white,
-              letterSpacing: 2.5,
-            ),
-            centerTitle: true,
-            shadowColor: Colors.black,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.elliptical(60, 10),
-                bottomRight: Radius.elliptical(60, 10),
-              ),
-            ),
-            leading: GestureDetector(
-              onDoubleTap: () => {_goBackToMainScreen(context)},
-              child: const Icon(
-                Icons.person_2_outlined,
-                size: 30,
-                color: Colors.black,
-              ),
-            )),
-        body: CustomGradientContainer(
-          child: Padding(
+      final ThemeData currentTheme = Theme.of(context);
+
+    return Theme(
+      data: currentTheme.brightness == Brightness.light ? lightTheme : darkTheme, 
+      child: Scaffold(
+          body: 
+          Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -79,6 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             elevation: 8,
                             child: TextField(
                               controller: _emailController,
+                              onChanged: (_) => _checkSignUpEnabled(),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(25),
@@ -101,6 +83,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             elevation: 8,
                             child: TextField(
                               controller: _passwordController,
+                              onChanged: (_) => _checkSignUpEnabled(),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(25),
@@ -123,6 +106,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             elevation: 8,
                             child: TextField(
                               controller: _finalpasswordController,
+                              onChanged: (_) => _checkSignUpEnabled(),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(25),
@@ -170,13 +154,24 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     }
                   },
-                  child: const Text('Sign Up'),
-                ),
+                  child: Text('Sign Up',
+                  style: GoogleFonts.robotoMono(
+                    color: Colors.white,fontSize: 16,fontWeight: FontWeight.w700
+                  )
+                  )),
               ],
             ),
-          ),
-        ));
+          )),
+    );
   }
+
+    void _checkSignUpEnabled() {
+    setState(() {
+      isSignUpEnabled = _emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty &&
+          _finalpasswordController.text.isNotEmpty;
+    });
+    }
 
   void _signUp() async {
     setState(() {
@@ -200,6 +195,7 @@ class _SignupScreenState extends State<SignupScreen> {
       log('Some error happend');
     }
   }
+
 }
 
 void _goBackToMainScreen(BuildContext context) {
