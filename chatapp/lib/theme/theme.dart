@@ -2,6 +2,7 @@ import 'package:chatapp/pages/loginandsignup/loginscreen.dart';
 import 'package:chatapp/pages/loginandsignup/signupscreen.dart';
 import 'package:chatapp/pages/spalshscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class CustomGradientContainer extends StatelessWidget {
@@ -12,7 +13,8 @@ class CustomGradientContainer extends StatelessWidget {
   final List<double> stops;
   final BorderSide border;
 
-  static const Color defaultGrey = Color(0xFF212121); // Equivalent to Colors.grey.shade900
+  static const Color defaultGrey =
+      Color(0xFF212121); // Equivalent to Colors.grey.shade900
 
   const CustomGradientContainer({
     super.key,
@@ -41,8 +43,6 @@ class CustomGradientContainer extends StatelessWidget {
     );
   }
 }
-
-
 
 class MyBottomNavBar extends StatefulWidget {
   const MyBottomNavBar({super.key});
@@ -86,9 +86,9 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.favorite), label: "Favorite"),
                 //BottomNavigationBarItem(
-                  //  icon: Icon(Icons.settings), label: "Setting"),
+                //  icon: Icon(Icons.settings), label: "Setting"),
                 //BottomNavigationBarItem(
-                  //  icon: Icon(Icons.person_outline), label: "Profile"),
+                //  icon: Icon(Icons.person_outline), label: "Profile"),
               ]),
         ),
       ),
@@ -97,7 +97,54 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
   }
 }
 
-MaterialStateColor customColor = MaterialStateColor.resolveWith((Set<MaterialState> states) {
+MaterialStateColor customColor =
+    MaterialStateColor.resolveWith((Set<MaterialState> states) {
   return const Color(0xFFF931AF);
 });
 
+ThemeData lightTheme = ThemeData(
+  primaryColor: Colors.white,
+  scaffoldBackgroundColor: Colors.white,
+  buttonTheme: const ButtonThemeData(
+      buttonColor: Color(0xFFF931AF), disabledColor: Colors.grey),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateColor.resolveWith(
+              (states) => const Color(0xFFF931AF)),
+          elevation: const MaterialStatePropertyAll(10),
+          enableFeedback: true,
+          textStyle: MaterialStateTextStyle.resolveWith((states) => GoogleFonts.robotoMono(                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700)),
+          shadowColor:
+              MaterialStateColor.resolveWith((states) => Colors.black)),
+              ),
+  textTheme: TextTheme(
+    labelLarge: GoogleFonts.robotoMono(color: Colors.white,fontSize: 10,fontWeight: FontWeight.w700)),
+  brightness: Brightness.light,
+  hintColor: Colors.black,
+  iconTheme: const IconThemeData(
+    color: Colors.black,
+  ),
+);
+
+ThemeData darkTheme = ThemeData(
+  primaryColor: Colors.black,
+  scaffoldBackgroundColor: Colors.black,
+  buttonTheme: const ButtonThemeData(
+      buttonColor: Color(0xFF008DDA), disabledColor: Colors.grey),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateColor.resolveWith(
+              (states) => const Color(0xFF008DDA)),
+          elevation: const MaterialStatePropertyAll(10),
+          enableFeedback: true,
+          textStyle: MaterialStateTextStyle.resolveWith((states) => TextStyle(color: Colors.white)),
+          shadowColor:
+              MaterialStateColor.resolveWith((states) => Colors.black))),
+  brightness: Brightness.dark,
+  hintColor: Colors.white,
+  iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+);
