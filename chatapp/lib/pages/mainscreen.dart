@@ -40,30 +40,3 @@ class _MainPageScreenState extends State<MainPageScreen> {
     );
   }
 }
-
-/*
-      appBar: AppBar(
-          title: const Text('TextApp'),
-          backgroundColor: Colors.grey.shade600,
-          surfaceTintColor: Colors.black,
-          elevation: 4,
-          titleTextStyle: const TextStyle(
-            fontSize: 25,
-            color: Colors.white,
-            letterSpacing: 2.5,
-          ),
-          centerTitle: true,
-          shadowColor: Colors.black,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.elliptical(60, 10),
-              bottomRight: Radius.elliptical(60, 10),
-            ),
-          ),
-          leading: const Icon(
-            Icons.mark_unread_chat_alt_sharp,
-            size: 30,
-            color: Colors.black,
-          ) //const Icon(Icons.mark_unread_chat_alt_sharp,textDirection: TextDirection.rtl),
-          ),
-*/

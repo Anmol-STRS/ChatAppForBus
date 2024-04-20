@@ -42,6 +42,9 @@ class _SignupScreenState extends State<SignupScreen> {
     return Theme(
       data: currentTheme.brightness == Brightness.light ? lightTheme : darkTheme, 
       child: Scaffold(
+        appBar: AppBar(
+
+        ),
           body: 
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -190,7 +193,7 @@ class _SignupScreenState extends State<SignupScreen> {
       log("User is successfully created");
       NotificationService()
           .showNotification(body: 'User Signed Up', title: 'User Signup');
-      //_goBackToMainScreen(context);
+      _goBackToMainScreen(context);
     } else {
       log('Some error happend');
     }

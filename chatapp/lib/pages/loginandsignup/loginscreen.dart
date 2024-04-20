@@ -106,7 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: () => {
                                   if (_emailController.text.isNotEmpty &&
                                       _passwordController.text.isNotEmpty)
-                                    {_login()}
+                                    {
+                                      _login(),
+                                    }
                                   else
                                     {
                                       showDialog(
@@ -126,11 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 ]);
                                           })
                                     },
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ChatScreenMain()))
                                 },
                                 child: Text(
                                   'Login',
@@ -234,9 +231,10 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       );
     } else {
-      _auth.checkUserExists(email).then((exists) {
+      _auth.checkUserExists(email, password).then((exists) {
         if (exists) {
-          _signIn();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ChatScreenMain()));
         } else {
           showDialog(
             context: context,
@@ -258,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       }).catchError((error) {
-        print('Error checking user existence: $error');
+        log('Error checking user existence: $error');
       });
     }
   }
