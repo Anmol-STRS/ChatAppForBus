@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:chatapp/pages/loginandsignup/chatscreen.dart';
+import 'package:chatapp/services/database.dart';
 import 'package:chatapp/theme/theme.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -13,35 +15,8 @@ class ChatScreenMain extends StatefulWidget {
 }
 
 class _chatScreenMainState extends State<ChatScreenMain> {
-  late DatabaseReference _userRef;
-  List<Map<dynamic, dynamic>> _users = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _userRef = FirebaseDatabase.instance.ref().child('users');
-    _users = [];
-    _fetchUsers();
-  }
-
-  Future<void> _fetchUsers() async {
-    _userRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        final Map<dynamic, dynamic>? data =
-            event.snapshot.value as Map<dynamic, dynamic>?;
-        if (data != null) {
-          setState(() {
-            _users = data.entries
-                .map((e) => e.value as Map<dynamic, dynamic>)
-                .toList();
-          });
-        }
-      }
-    }, onError: (error) {
-      log("Error fetching users: $error");
-    });
-  }
-
+  final DatabaseReference _user =
+      FirebaseDatabase.instance.ref('Database').child('user');
   @override
   Widget build(BuildContext context) {
     final ThemeData currentTheme = Theme.of(context);
@@ -50,6 +25,7 @@ class _chatScreenMainState extends State<ChatScreenMain> {
           currentTheme.brightness == Brightness.light ? lightTheme : darkTheme,
       child: Scaffold(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Text('Chats'),
           titleTextStyle: GoogleFonts.outfit(
@@ -68,7 +44,7 @@ class _chatScreenMainState extends State<ChatScreenMain> {
               width: 350,
               child: Material(
                 borderRadius: BorderRadius.circular(25),
-                shadowColor: Colors.white70,
+                shadowColor: Colors.black,
                 color: Colors.white,
                 elevation: 8,
                 child: TextField(
@@ -80,28 +56,80 @@ class _chatScreenMainState extends State<ChatScreenMain> {
                       labelText: 'Search for chats',
                       prefixIcon: const Icon(
                         Icons.search,
-                        shadows: [
-                          Shadow(
-                              color: Colors.black,
-                              blurRadius: 2,
-                              offset: Offset.zero)
-                        ],
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      contentPadding: const EdgeInsets.symmetric()),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16)),
                 ),
               ),
             )),
             Expanded(
-                child: ListView.builder(
-              itemCount: _users.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  subtitle: Text(_users[index]['user']),
-                  tileColor: Colors.black,
-                );
-              },
-            ))
+              child: StreamBuilder<DatabaseEvent>(
+                stream: FirebaseDatabase.instance.ref('Database').onValue,
+                builder: (BuildContext context,
+                    AsyncSnapshot<DatabaseEvent> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+                  if (!dataSnapshot.exists) {
+                    return Text('No data available');
+                  }
+                  Map<dynamic, dynamic> users =
+                      dataSnapshot.value as Map<dynamic, dynamic>;
+                  List<dynamic> userList = users.values.toList();
+                  return ListView.builder(
+                    itemCount: userList.length,
+                    itemBuilder: (context, index) {
+                      final userData = userList[index];
+                      if (userData == null) {
+                        return const SizedBox.shrink();
+                      }
+                      final userName = userData['user'] as String;
+                      final currentUser = getCurrentUser();
+                      if (userName != currentUser!.email) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Material(
+                            elevation: 10,
+                            shadowColor: Colors.black,
+                            borderRadius: BorderRadius.circular(20),
+                            child: ListTile(
+                              title: Row(
+                                children: [
+                                  const Icon(Icons.person), // Add icon here
+                                  const SizedBox(
+                                      width:
+                                          10), // Add spacing between icon and text
+                                  Text(userName),
+                                ],
+                              ),
+                              onTap: () {
+                                String receiverID = userData['userID'];
+
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MainChatScreen(receiverUserID: receiverID)));
+                              },
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 8),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
