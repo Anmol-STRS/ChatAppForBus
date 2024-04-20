@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 final databaseref = FirebaseDatabase.instance.ref();
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 void addData(String? user, String? password, TextEditingController controller) {
   databaseref
@@ -31,4 +33,8 @@ Future<void> readData() async {
   } catch (e) {
     log("Error reading data: $e");
   }
+}
+
+User? getCurrentUser() {
+  return _auth.currentUser!;
 }

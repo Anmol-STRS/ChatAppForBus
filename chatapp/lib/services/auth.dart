@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseAuthService {
-  
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<User?> signUpWithEmailAndPassword(
@@ -21,20 +21,40 @@ class FirebaseAuthService {
     }
     return null;
   }
-  Future<bool> checkUserExists(String email) async {
-    try {
-      // Use FirebaseAuth's built-in method to check if the user exists
-      var userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: '',
-      );
-      await userCredential.user?.delete();
-      return true;
-    } catch (error) {
-      // If there's an error, return false
-      return false;
+
+
+Future<bool> checkUserExists(String email, String password) async {
+  try {
+    // Query the "Database" node for users with the given email
+   DatabaseEvent snapshot = await FirebaseDatabase.instance
+        .ref()
+        .child('Database')
+        .orderByChild('user')
+        .equalTo(email)
+        .once();
+
+    if (snapshot.snapshot.exists) {
+      // Iterate through the users
+      Map<dynamic, dynamic>? users = snapshot.snapshot.value as Map<dynamic, dynamic>?;
+      if (users != null) {
+        for (var userKey in users.keys) {
+          var user = users[userKey];
+          // Check if the password matches
+          if (user['password'] == password) {
+            // Password matches, user exists
+            return true;
+          }
+        }
+      }
     }
+    // User not found or password doesn't match
+    return false;
+  } catch (error) {
+    print('Error checking user existence: $error');
+    return false;
   }
+}
+
 
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
@@ -51,4 +71,24 @@ class FirebaseAuthService {
     }
     return null;
   }
+void sendMessage(String senderId, String receiverId, String content) {
+  DatabaseReference messagesRef = FirebaseDatabase.instance
+      .ref()
+      .child('users')
+      .child(receiverId)
+      .child('messages')
+      .push();
+  
+  messagesRef.set({
+    'sender': senderId,
+    'receiver': receiverId,
+    'timestamp': DateTime.now().millisecondsSinceEpoch,
+    'content': content,
+  });
 }
+
+
+
+}
+
+
