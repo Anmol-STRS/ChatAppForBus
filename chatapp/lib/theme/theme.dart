@@ -108,19 +108,21 @@ ThemeData lightTheme = ThemeData(
   buttonTheme: const ButtonThemeData(
       buttonColor: Color(0xFFF931AF), disabledColor: Colors.grey),
   elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-          backgroundColor: MaterialStateColor.resolveWith(
-              (states) => const Color(0xFFF931AF)),
-          elevation: const MaterialStatePropertyAll(10),
-          enableFeedback: true,
-          textStyle: MaterialStateTextStyle.resolveWith((states) => GoogleFonts.robotoMono(                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700)),
-          shadowColor:
-              MaterialStateColor.resolveWith((states) => Colors.black)),
-              ),
+    style: ButtonStyle(
+        backgroundColor:
+            MaterialStateColor.resolveWith((states) => const Color(0xFFF931AF)),
+        elevation: const MaterialStatePropertyAll(10),
+        enableFeedback: true,
+        textStyle: MaterialStateTextStyle.resolveWith((states) =>
+            GoogleFonts.robotoMono(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.w700)),
+        shadowColor: MaterialStateColor.resolveWith((states) => Colors.black)),
+  ),
   textTheme: TextTheme(
-    labelLarge: GoogleFonts.robotoMono(color: Colors.white,fontSize: 10,fontWeight: FontWeight.w700)),
+      labelLarge: GoogleFonts.robotoMono(
+          color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
   brightness: Brightness.light,
   hintColor: Colors.black,
   iconTheme: const IconThemeData(
@@ -139,7 +141,8 @@ ThemeData darkTheme = ThemeData(
               (states) => const Color(0xFF008DDA)),
           elevation: const MaterialStatePropertyAll(10),
           enableFeedback: true,
-          textStyle: MaterialStateTextStyle.resolveWith((states) => TextStyle(color: Colors.white)),
+          textStyle: MaterialStateTextStyle.resolveWith(
+              (states) => TextStyle(color: Colors.white)),
           shadowColor:
               MaterialStateColor.resolveWith((states) => Colors.black))),
   brightness: Brightness.dark,
@@ -148,3 +151,5 @@ ThemeData darkTheme = ThemeData(
     color: Colors.white,
   ),
 );
+
+ThemeData adTheme = ThemeData();
