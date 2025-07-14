@@ -30,8 +30,8 @@ For detailed instructions on setting up Firebase with Flutter, refer to the [off
 
 ## Screenshots
 
-![Screenshot 1](screenshots/1.png)
-![Screenshot 2](screenshots/2.png)
+![Screenshot 1](chatapp/screenshots/1.png)
+![Screenshot 2](chatapp/screenshots/2.png)
 
 
 ## Contributing
